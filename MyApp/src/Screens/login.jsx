@@ -60,14 +60,14 @@ const Login = ({ setAuth, navigation }) => {
                 <Text style={styles.alternateText}>---------   Or SignIn with   ---------</Text>
                 <View style={styles.iconContainer}>
                     <View style={styles.iconParent}>
-                        <Image source={require('../../Images/user.png')} style={styles.icons} />
+                        <Image source={require('../../Images/facebook.png')} style={styles.icons} />
                     </View>
                     <View style={styles.iconParent}>
-                        <Image source={require('../../Images/user.png')} style={styles.icons} />
-                    </View> 
-                    <View style={styles.iconParent}>
-                        <Image source={require('../../Images/user.png')} style={styles.icons} />
+                        <Image source={require('../../Images/google.png')} style={styles.icons} />
                     </View>
+                     <View style={styles.iconParent}>
+                                            <Image source={require('../../Images/instagram.png')} style={styles.icons} />
+                                        </View>
                 </View>
             </View>
         </View>
@@ -76,7 +76,7 @@ const Login = ({ setAuth, navigation }) => {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#00AFAF',
+        backgroundColor: '#47787F',
         height: 250,
         width: '100%',
         borderBottomRightRadius: 20,
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     login: {
         fontSize: 35,
-        color: '#00AFAF',
+        color: '#47787F',
         fontWeight: 'bold',
     },
     input: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     Button: {
-        backgroundColor: '#00AFAF',
+        backgroundColor: '#47787F',
         borderRadius: 20,
         padding: 20,
         height: 65,
@@ -140,8 +140,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     icons: {
-        height: 40,
-        width: 40
+        height: 55,
+        width: 55
     },
     alternateText: {
         marginTop: 40,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     },
     errorText: {
         color: 'red',
-        fontSize: 12,
+        fontSize: 15,
         marginTop: 5,
     }
 });

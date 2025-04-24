@@ -1,27 +1,29 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TextInput } from 'react-native';
 
-const Post = ({ image, forSale }) => {
+const Post = ({ name, Postimage, forSale, Profileimage }) => {
     const [liked, setLiked] = useState(false);
     return (
         <View style={styles.posts}>
+            {/* if for sale then return this layout */}
             {forSale ? (<View style={styles.posterInfo}>
-                <Image source={require('../../Images/profile1.jpg')} style={styles.profileImage} />
-                <Text style={{ fontSize: 25, marginLeft: 10 }}>Zainab Asif</Text>
+                <Image source={Profileimage} style={styles.profileImage} />
+                <Text style={{ fontSize: 25, marginLeft: 10 }}>{name}</Text>
             </View>) : (
+                // else without sale return this layout
                 <View style={styles.posterInfo}>
-                    <Image source={require('../../Images/profile1.jpg')} style={styles.profileImage} />
-                    <Text style={{ fontSize: 25, marginLeft: 10 }}>Zainab Asif</Text>
+                    <Image source={Profileimage} style={styles.profileImage} />
+                    <Text style={{ fontSize: 25, marginLeft: 10 }}>{name}</Text>
                     <Text style={styles.salesText}>For Sale</Text>
                 </View>
             )}
-            <Image source={image} style={styles.postImage} />
+            <Image source={Postimage} style={styles.postImage} />
             <Text style={styles.postText}>Bringing colors to life, one brushstrokes at a time!</Text>
             <View style={{ width: '100%', alignItems: 'flex-end' }}>
                 <TouchableOpacity onPress={() => setLiked(!liked)}>
                     <Image
                         source={liked
-                            ? require('../../Images/icons8-heart-50.png')
+                            ? require('../../Images/heart.png')
                             : require('../../Images/icons8-heart-24.png')
                         }
                         style={styles.icon}
@@ -72,8 +74,8 @@ const styles = StyleSheet.create({
     },
     salesText: {
         fontSize: 24,
-        marginLeft:90,
-        color:'#00AFAF'
+        marginLeft: 90,
+        color: '#47787F'
     }
 })
 export default Post

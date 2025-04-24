@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 const Main = ({navigation}) => {
 
   return (
-    <LinearGradient colors={['#005F5F', '#007F7F', '#00AFAF']} style={styles.container}>
+    <LinearGradient colors={['#7FA3A7', '#47787F', '#2F4F53']} style={styles.container}>
       <Image source={require('../../Images/social.jpg')} style={styles.image} />
       <Text style={[styles.text, styles.heading]}>Home Talents</Text>
       <Text style={[styles.text, styles.para]} >Make your journey exciting, with adding a bit of appreciation</Text>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   buttonText: {
-    color: '#005F5F',
+    color: '#47787F',
     fontWeight: 'bold',
     fontSize: 25,
     textAlign:'center',

@@ -9,29 +9,29 @@ const Posts = () => {
 
     <ScrollView>
       <View style={styles.posts}>
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
       </View>
       <View style={styles.posts}>
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post6.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post7.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post8.jpg')} style={styles.postImg} />
       </View>
       <View style={styles.posts}>
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
       </View>
       <View style={styles.posts}>
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
       </View>
       <View style={styles.posts}>
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
-          <Image source={require('../../Images/profile1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
+        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
       </View>
     </ScrollView>
   )
@@ -41,9 +41,9 @@ const Services = () => {
   return (
     <ScrollView>
       <View style={styles.sales}>
-        <Image source={require('../../Images/cupcake.png')} style={styles.salesImg} />
+        <Image source={require('../../Images/post1.jpg')} style={styles.salesImg} />
         <View style={{ textAlign: 'center' }}>
-          <Text style={styles.salesHeading}>Calligraphy </Text>
+          <Text style={styles.salesHeading}>Painting </Text>
           <Text style={styles.salesDesc}>2000 Rs Only</Text>
           <TouchableOpacity style={styles.button} onPress={() => alert('Contact Zainab Asif at:\n 03783747565748\n ')}>
             <Text style={styles.buttonText}>Order Now</Text>
@@ -52,9 +52,9 @@ const Services = () => {
       </View>
 
       <View style={styles.sales}>
-        <Image source={require('../../Images/profile1.jpg')} style={styles.salesImg} />
+        <Image source={require('../../Images/post5.jpg')} style={styles.salesImg} />
         <View style={{ textAlign: 'center' }}>
-          <Text style={styles.salesHeading}>Calligraphy </Text>
+          <Text style={styles.salesHeading}>Painting </Text>
           <Text style={styles.salesDesc}>2000 Rs Only</Text>
           <TouchableOpacity style={styles.button} onPress={() => alert('Contact Zainab Asif at:\n 03783747565748\n ')}>
             <Text style={styles.buttonText}>Order Now</Text>
@@ -63,9 +63,9 @@ const Services = () => {
       </View>
 
       <View style={styles.sales}>
-        <Image source={require('../../Images/profile1.jpg')} style={styles.salesImg} />
+        <Image source={require('../../Images/post4.jpg')} style={styles.salesImg} />
         <View style={{ textAlign: 'center' }}>
-          <Text style={styles.salesHeading}>Calligraphy </Text>
+          <Text style={styles.salesHeading}>Painting </Text>
           <Text style={styles.salesDesc}>2000 Rs Only</Text>
           <TouchableOpacity style={styles.button} onPress={() => alert('Contact Zainab Asif at:\n 03783747565748\n ')}>
             <Text style={styles.buttonText}>Order Now</Text>
@@ -74,9 +74,9 @@ const Services = () => {
       </View>
 
       <View style={styles.sales}>
-        <Image source={require('../../Images/profile1.jpg')} style={styles.salesImg} />
+        <Image source={require('../../Images/post6.jpg')} style={styles.salesImg} />
         <View style={{ textAlign: 'center' }}>
-          <Text style={styles.salesHeading}>Calligraphy </Text>
+          <Text style={styles.salesHeading}>Painting </Text>
           <Text style={styles.salesDesc}>2000 Rs Only</Text>
           <TouchableOpacity style={styles.button} onPress={() => alert('Contact Zainab Asif at:\n 03783747565748\n ')}>
             <Text style={styles.buttonText}>Order Now</Text>
@@ -88,19 +88,22 @@ const Services = () => {
   )
 }
 
+//tells which component to render on which tab
 const renderScene = SceneMap({
   first: Posts,
   second: Services,
 });
 
+//tells the title and key of tabs
 const routes = [
   { key: 'first', title: 'Posts' },
   { key: 'second', title: 'Services' },
 ];
 
 const Profile = () => {
-
+  //width of tabbar to suit on every device
   const layout = useWindowDimensions();
+  //which tab is active
   const [index, setIndex] = React.useState(0);
 
   return (
@@ -127,8 +130,9 @@ const Profile = () => {
         renderTabBar={props => (
           <TabBar
             {...props}
-            style={{ backgroundColor: '#00AFAF' }}
+            style={{ backgroundColor: '#47787F' }}
             indicatorStyle={{ backgroundColor: 'white' }}
+            tabStyle={{ height: -10, fontSize: 30 }}
           />
         )}
       />
@@ -217,7 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   button: {
-    backgroundColor: '#00AFAF',
+    backgroundColor: '#47787F',
     height: 50,
     border: 1,
     width: 160,
@@ -233,7 +237,7 @@ const styles = StyleSheet.create({
     align: 'center',
   },
   profileButton: {
-    backgroundColor: '#00AFAF',
+    backgroundColor: '#47787F',
     height: 50,
     border: 1,
     display: 'flex',

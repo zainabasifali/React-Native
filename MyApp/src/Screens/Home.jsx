@@ -29,7 +29,7 @@ const Home = () => {
                 </View>
                 <View style={styles.category}>
                     <Image source={require('../../Images/bracelet.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Adorns</Text>
+                    <Text style={styles.categoryText} >Decor</Text>
                 </View>
                 <View style={styles.category}>
                     <Image source={require('../../Images/cupcake.png')} style={styles.categoryImage} />
@@ -45,17 +45,17 @@ const Home = () => {
                 </View>
             </ScrollView>
 
-            <Post image = {require('../../Images/profile1.jpg')} forSale = {false}/>
-            <Post image = {require('../../Images/cupcake.png')} forSale = {true}/>
-            <Post image = {require('../../Images/profile1.jpg')} forSale = {false}/>
-            <Post image = {require('../../Images/cupcake.png')} forSale = {true}/>
+            <Post name = {'Zainab Asif'} Postimage = {require('../../Images/post1.jpg')} forSale = {false} Profileimage = {require('../../Images/profile1.jpg')}/>
+            <Post name = {'Abass Ali'} Postimage = {require('../../Images/post2.jpg')} forSale = {true} Profileimage = {require('../../Images/profile2.jpg')}/>
+            <Post  name = {'Adeeba Ali'} Postimage = {require('../../Images/post3.jpg')} forSale = {false} Profileimage = {require('../../Images/profile1.jpg')}/>
+            <Post  name = {'Hur Ali'} Postimage = {require('../../Images/profile1.jpg')} forSale = {true} Profileimage = {require('../../Images/profile2.jpg')}/>
 
         </ScrollView>
     )
 }
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#00AFAF',
+        backgroundColor: '#47787F',
         height: 250,
         width: '100%',
         borderBottomRightRadius: 20,
@@ -106,4 +106,5 @@ const styles = StyleSheet.create({
         color: 'black',
     }
 })
+
 export default Home
