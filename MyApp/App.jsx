@@ -8,13 +8,14 @@ import Profile from './src/Screens/Profile'
 import Main from "./src/Screens/Main";
 import Login from "./src/Screens/login"
 import AddPost from './src/Screens/AddPost';
+import SignUp from './src/Screens/signUp';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
     const [auth, setAuth] = useState(false)
-    
+
     const TabStack = () => {
         return (
             <Tab.Navigator initialRouteName="Home" screenOptions={{
@@ -30,6 +31,13 @@ const App = () => {
         return (
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Main" component={Main} />
+                <Stack.Screen name="SignUp"
+                    options={{
+                        gestureEnabled: true,
+                    }}>
+                    {props => <SignUp {...props} setAuth={setAuth} />}
+
+                </Stack.Screen>
                 <Stack.Screen name="Login"
                     options={{
                         gestureEnabled: true,
@@ -43,9 +51,9 @@ const App = () => {
     return (
         <NavigationContainer>
             {auth ? (
-                <TabStack/>           
-             ) : (
-                <LoginStack/>
+                <TabStack />
+            ) : (
+                <LoginStack />
             )}
 
         </NavigationContainer>

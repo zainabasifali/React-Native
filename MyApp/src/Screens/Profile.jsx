@@ -8,31 +8,14 @@ const Posts = () => {
   return (
 
     <ScrollView>
-      <View style={styles.posts}>
+        <View style={styles.posts}>
         <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
         <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
         <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
-      </View>
-      <View style={styles.posts}>
-        <Image source={require('../../Images/post6.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post7.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post8.jpg')} style={styles.postImg} />
-      </View>
-      <View style={styles.posts}>
-        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
+         <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
         <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
         <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
-      </View>
-      <View style={styles.posts}>
-        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
-      </View>
-      <View style={styles.posts}>
-        <Image source={require('../../Images/post1.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post4.jpg')} style={styles.postImg} />
-        <Image source={require('../../Images/post5.jpg')} style={styles.postImg} />
-      </View>
+</View>
     </ScrollView>
   )
 }
@@ -172,11 +155,12 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   posts: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 20,
     marginTop: 10,
+    marginBottom: 10
   },
   sales: {
     flexDirection: 'row',
@@ -215,7 +199,7 @@ const styles = StyleSheet.create({
 
   postImg: {
     height: 130,
-    width: 112,
+    width: '90%',
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 10

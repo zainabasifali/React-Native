@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
+import Header from '../Components/Header';
 
 const Login = ({ setAuth, navigation }) => {
     const [email, setEmail] = useState('');
@@ -19,13 +20,7 @@ const Login = ({ setAuth, navigation }) => {
 
     return (
         <View>
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('../../Images/icons8-arrow-left-50.png')} style={styles.backButton} />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>Hello!</Text>
-                <Text style={styles.headerSubText}>Welcome to Home Talents</Text>
-            </View>
+            <Header navigation={navigation} />
             <View style={styles.loginForm}>
                 <Text style={styles.login}>Login</Text>
                 <TextInput
@@ -65,9 +60,9 @@ const Login = ({ setAuth, navigation }) => {
                     <View style={styles.iconParent}>
                         <Image source={require('../../Images/google.png')} style={styles.icons} />
                     </View>
-                     <View style={styles.iconParent}>
-                                            <Image source={require('../../Images/instagram.png')} style={styles.icons} />
-                                        </View>
+                    <View style={styles.iconParent}>
+                        <Image source={require('../../Images/instagram.png')} style={styles.icons} />
+                    </View>
                 </View>
             </View>
         </View>
@@ -75,24 +70,7 @@ const Login = ({ setAuth, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    header: {
-        backgroundColor: '#47787F',
-        height: 250,
-        width: '100%',
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-        padding: 30,
-        fontWeight: 'bold'
-    },
-    headerText: {
-        fontSize: 50,
-        color: 'white',
-        marginTop: 20
-    },
-    headerSubText: {
-        fontSize: 25,
-        color: '#D3D3D3'
-    },
+
     loginForm: {
         padding: 30,
         marginTop: 25
@@ -148,11 +126,6 @@ const styles = StyleSheet.create({
         fontSize: 25,
         textAlign: 'center',
         color: 'gray'
-    },
-    backButton: {
-        height: 30,
-        width: 30,
-        marginTop: 15,
     },
     errorText: {
         color: 'red',

@@ -1,7 +1,7 @@
 import { TouchableOpacity, StyleSheet, View, Image, Text, Button } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Main = ({navigation}) => {
+const Main = ({ navigation }) => {
 
   return (
     <LinearGradient colors={['#7FA3A7', '#47787F', '#2F4F53']} style={styles.container}>
@@ -9,7 +9,7 @@ const Main = ({navigation}) => {
       <Text style={[styles.text, styles.heading]}>Home Talents</Text>
       <Text style={[styles.text, styles.para]} >Make your journey exciting, with adding a bit of appreciation</Text>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => alert('Explore Pressed!')} >
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUp')} >
           <Text style={styles.buttonText}>SignUp</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')} >
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     width: 340,
     borderRadius: 100,
     marginBottom: 30,
-    alignSelf:'center'
+    alignSelf: 'center'
   },
   text: {
     color: 'white',
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent:'space-around'
+    justifyContent: 'space-around'
   },
   button: {
     backgroundColor: '#FFFFFF',
@@ -61,9 +61,9 @@ const styles = StyleSheet.create({
     color: '#47787F',
     fontWeight: 'bold',
     fontSize: 25,
-    textAlign:'center',
-    marginTop:10
-    
+    textAlign: 'center',
+    marginTop: 10
+
   }
 })
 export default Main;
