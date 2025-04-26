@@ -15,6 +15,20 @@ const Login = ({ setAuth, navigation }) => {
         }
         console.log('email is: ', email);
         console.log('Password is: ', password);
+
+        fetch('http://10.0.2.2:3000/api/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password,
+            }),
+        })
+            .then(res => res.json())
+            .then(data => console.log('Response:', data))
+            .catch(err => console.error(err));
         setAuth(true);
     };
 

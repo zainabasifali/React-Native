@@ -25,6 +25,21 @@ const SignUp = ({ navigation, setAuth }) => {
             alert('Please check credentials and fill in all fields');
             return;
         }
+        fetch('http://10.0.2.2:3000/api/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password,
+                profilePicture: image ? image : '../../Imagesuser.png'
+            }),
+        })
+            .then(res => res.json())
+            .then(data => console.log('Response:', data))
+            .catch(err => console.error(err));
         setAuth(true)
 
     };

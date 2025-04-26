@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity } from 'react-native';
 import { useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
@@ -84,10 +85,27 @@ const routes = [
 ];
 
 const Profile = () => {
-  //width of tabbar to suit on every device
-  const layout = useWindowDimensions();
-  //which tab is active
-  const [index, setIndex] = React.useState(0);
+
+  const layout = useWindowDimensions(); //width of tabbar to suit on every device
+  const [index, setIndex] = React.useState(0);//which tab is active
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const fetchProfile = async()=>{
+    setLoading(true);
+    try {
+      const response = await fetch('http://10.0.2.2:3000/'); 
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+    setLoading(false);
+  }
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
 
   return (
     <View style={styles.View}>
