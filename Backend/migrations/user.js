@@ -10,6 +10,7 @@ exports.up = function(knex) {
         table.string('email').notNullable().unique();
         table.string('password').notNullable();
         table.string('profilePicture').defaultTo(null);
+        table.string('profession').defaultTo(null);
         table.integer('follower_count').defaultTo(0);
         table.integer('following_count').defaultTo(0);
         table.timestamps(true, true); 

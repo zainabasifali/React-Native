@@ -7,6 +7,6 @@ module.exports = {
     database: 'hometalents',
   },
   migrations: {
-    directory: './migrations', 
+    directory: './migrations/', 
   },
 };
