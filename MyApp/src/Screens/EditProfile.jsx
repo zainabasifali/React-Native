@@ -1,15 +1,37 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+import { ScrollView } from "react-native-gesture-handler";
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import Header from '../Components/Header';
 
-const SignUp = ({ navigation }) => {
+const EditProfile = ({ user, navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [image, setImage] = useState('');
     const [profession, setProfession] = useState('');
     const [password, setPassword] = useState('')
-    const [error, setError] = useState({ nameError: '', emailError: '', passwordError: '', professionError: '' });
+    const [nameError, setNameError] = useState('');
+    const [professionError, setProfessionError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+
+    const fetchProfile = async () => {
+        try {
+            const response = await fetch(`http://10.0.2.2:3000/api/user/profile/${user.id}`);
+            const data = await response.json();
+            setName(data.name);
+            setEmail(data.email);
+            setPassword(data.password);
+            setProfession(data.profession);
+            setImage(data.profilePicture);
+
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    }
+    useEffect(() => {
+        fetchProfile();
+    }, [user]);
 
     const selectImage = () => {
         launchImageLibrary({ mediaType: 'photo' }, response => {
@@ -18,9 +40,8 @@ const SignUp = ({ navigation }) => {
             }
         });
     };
-
     const handleSubmit = () => {
-        if (!email || !password || !name || error.nameError || error.emailError || error.passwordError || error.professionError) {
+        if (emailError || passwordError || !email || !password || !name || nameError) {
             alert('Please check credentials and fill in all fields');
             return;
         }
@@ -29,44 +50,43 @@ const SignUp = ({ navigation }) => {
         formData.append('email', email);
         formData.append('password', password);
         formData.append('profession', profession);
-        if (image) {
+
+        if (image && image.startsWith('file')) {
             formData.append('profilePicture', {
                 uri: image,
                 type: 'image/jpeg',
                 name: `${Date.now()}_profile.jpg`,
             });
         }
-        fetch('http://10.0.2.2:3000/api/user/register', {
-            method: 'POST',
+
+        fetch(`http://10.0.2.2:3000/api/user/updateProfile/${user.id}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
             body: formData
         })
-            .then(async res => {
-                const data = await res.json();
-                if (res.ok) {
-                    navigation.navigate('Login')
-                } else {
-                    alert(data.message);
+            .then(res => res.json())
+            .then(data => {
+                console.log('Response:', data)
+                if (data.success === true) {
+                    navigation.navigate('Profile')
                 }
             })
-            .catch(err => {
-                console.error(err);
-                alert('Something went wrong. Please try again later.');
-            });
-
+            .catch(err => console.error(err));
 
     };
-
     return (
-        <ScrollView>
-            <Header navigation={navigation} textMain="Hello!" textSub="Welcome to Home Talents" />
+        <ScrollView >
+            <Header navigation={navigation} textMain={"Edit Profile"} textSub={"Below is your information"} />
             <View style={styles.loginForm}>
-                <Text style={styles.login}>SignUp</Text>
                 {image ? (
                     <Image
-                        source={{ uri: image }}
+                        source={
+                            image.startsWith('file')
+                                ? { uri: image }
+                                : { uri: `http://10.0.2.2:3000/uploads/${image}` }
+                        }
                         style={styles.imagePreview}
                     />
                 ) : (
@@ -86,36 +106,36 @@ const SignUp = ({ navigation }) => {
                     onChangeText={(text) => {
                         setName(text);
                         const nameRegex = /^[a-zA-Z ]{2,}$/;
-                        setError(prev => ({ ...prev, nameError: nameRegex.test(text) ? '' : 'Invalid name' }));
+                        setNameError(nameRegex.test(text) ? '' : 'Invalid name');
                     }}
                     placeholder="Full Name"
                     value={name}
                 />
-                {error.nameError ? <Text style={styles.errorText}>{error.nameError}</Text> : null}
+                {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
 
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => {
                         setProfession(text);
                         const professionRegex = /^[a-zA-Z ]{2,}$/;
-                        setError(prev => ({ ...prev, professionError: professionRegex.test(text) ? '' : 'Invalid profession' }));
+                        setProfessionError(professionRegex.test(text) ? '' : 'Invalid profession');
                     }}
                     placeholder="Profession"
                     value={profession}
                 />
-                {error.professionError ? <Text style={styles.errorText}>{error.professionError}</Text> : null}
+                {professionError ? <Text style={styles.errorText}>{professionError}</Text> : null}
 
                 <TextInput
                     style={styles.input}
                     onChangeText={(text) => {
                         setEmail(text);
                         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                        setError(prev => ({ ...prev, emailError: emailRegex.test(text) ? '' : 'Invalid email address' }));
+                        setEmailError(emailRegex.test(text) ? '' : 'Invalid email address');
                     }}
                     placeholder="Email"
                     value={email}
                 />
-                {error.emailError ? <Text style={styles.errorText}>{error.emailError}</Text> : null}
+                {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
                 <TextInput
                     style={styles.input}
@@ -123,24 +143,25 @@ const SignUp = ({ navigation }) => {
                     onChangeText={(text) => {
                         setPassword(text);
                         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
-                        setError(prev => ({ ...prev, passwordError: passwordRegex.test(text) ? '' : 'Password must be at least 8 characters, include upper/lowercase, a number, and special char' }));
+                        setPasswordError(passwordRegex.test(text) ? '' : 'Password must be at least 8 characters, include upper/lowercase, a number, and special char');
                     }}
                     placeholder="Password"
                     value={password}
                 />
-                {error.passwordError ? <Text style={styles.errorText}>{error.passwordError}</Text> : null}
+                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
 
                 <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
-                    <Text style={styles.ButtonText}>SignUp</Text>
+                    <Text style={styles.ButtonText}>Save</Text>
                 </TouchableOpacity>
 
 
             </View>
+
+
         </ScrollView>
     )
 }
 const styles = StyleSheet.create({
-
     loginForm: {
         padding: 30,
         marginTop: 25
@@ -210,4 +231,4 @@ const styles = StyleSheet.create({
     }
 
 });
-export default SignUp
+export default EditProfile;

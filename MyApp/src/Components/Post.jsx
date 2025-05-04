@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TextInput } from 'react-native';
 
-const Post = ({ name, Postimage, forSale, Profileimage }) => {
+const Post = ({ postData }) => {
     const [liked, setLiked] = useState(false);
     return (
         <View style={styles.posts}>
-            {/* if for sale then return this layout */}
-            {forSale ? (<View style={styles.posterInfo}>
-                <Image source={Profileimage} style={styles.profileImage} />
-                <Text style={{ fontSize: 25, marginLeft: 10 }}>{name}</Text>
+            {postData.type !== 'Service' ? (<View style={styles.posterInfo}>
+                <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
+                <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
             </View>) : (
-                // else without sale return this layout
                 <View style={styles.posterInfo}>
-                    <Image source={Profileimage} style={styles.profileImage} />
-                    <Text style={{ fontSize: 25, marginLeft: 10 }}>{name}</Text>
+                    <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
+                    <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
                     <Text style={styles.salesText}>For Sale</Text>
                 </View>
             )}
-            <Image source={Postimage} style={styles.postImage} />
-            <Text style={styles.postText}>Bringing colors to life, one brushstrokes at a time!</Text>
+            <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.postPicture}` }} style={styles.postImage} />
+            <Text style={styles.postText}>{postData.description}</Text>
             <View style={{ width: '100%', alignItems: 'flex-end' }}>
                 <TouchableOpacity onPress={() => setLiked(!liked)}>
                     <Image

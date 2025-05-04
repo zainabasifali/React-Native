@@ -1,57 +1,95 @@
-import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TextInput } from 'react-native';
-import React, { useState } from "react";
+import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TextInput, FlatList, ActivityIndicator,RefreshControl } from 'react-native';
+import React, { useState, useEffect } from "react";
 import Post from '../Components/Post';
+import Header from '../Components/Header';
 
-const Home = () => {
-    return (
-        <ScrollView>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Home Talents</Text>
-                <View style={styles.searchContainer}>
-                    <Image source={require('../../Images/search.png')} style={styles.searchIcon} />
-                    <TextInput style={styles.search} placeholder="Search..." placeholderTextColor="gray" />
-                </View>
-            </View>
+const Home = ({ navigation }) => {
+    const [categories, setCategories] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
 
-            <Text style={styles.subHeading}>Categories</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ padding: 10 }}>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/paint-palette.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Arts</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/coding.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Tech</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/illustration.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Design</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/bracelet.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Decor</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/cupcake.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Bakes</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/sewing-machine.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Stich</Text>
-                </View>
-                <View style={styles.category}>
-                    <Image source={require('../../Images/fast-food.png')} style={styles.categoryImage} />
-                    <Text style={styles.categoryText} >Foods</Text>
-                </View>
-            </ScrollView>
+    const fetchCategories = async () => {
+        try {
+            const response = await fetch(`http://10.0.2.2:3000/api/categories/allCategories`);
+            const data = await response.json();
+            setCategories(data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
+    const fetchPosts = async (categoryId = null) => {
+        setLoading(true);
+        try {
+            const url = categoryId 
+            ? `http://10.0.2.2:3000/api/posts/categoryPosts/${categoryId}`
+            : 'http://10.0.2.2:3000/api/posts/allPosts';
 
-            <Post name = {'Zainab Asif'} Postimage = {require('../../Images/post1.jpg')} forSale = {false} Profileimage = {require('../../Images/profile1.jpg')}/>
-            <Post name = {'Abass Ali'} Postimage = {require('../../Images/post2.jpg')} forSale = {true} Profileimage = {require('../../Images/profile2.jpg')}/>
-            <Post  name = {'Adeeba Ali'} Postimage = {require('../../Images/post3.jpg')} forSale = {false} Profileimage = {require('../../Images/profile1.jpg')}/>
-            <Post  name = {'Hur Ali'} Postimage = {require('../../Images/profile1.jpg')} forSale = {true} Profileimage = {require('../../Images/profile2.jpg')}/>
-
-        </ScrollView>
+            const response = await fetch(url);
+            const data = await response.json();
+            setPosts(data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        } 
+    }
+    const renderCategories = ({ item }) => (
+        <View style={styles.category}>
+            <TouchableOpacity onPress={()=>{fetchPosts(item.id)}}>
+            <Image source={{ uri: `http://10.0.2.2:3000/uploads/${item.picture}` }} style={styles.categoryImage} />
+            </TouchableOpacity>
+            <Text style={styles.categoryText} >{item.name}</Text>
+        </View>
+    );
+    const renderPosts = ({ item }) => (
+        <Post postData={item}/>
     )
+
+    useEffect(() => {
+        fetchCategories();
+        fetchPosts();
+    }, []);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await fetchPosts();
+        setRefreshing(false);
+    };
+
+    if (loading) {
+        return (
+            <View>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
+    return (
+        <FlatList
+            data={posts}
+            renderItem={renderPosts}
+            keyExtractor={(item) => item.id.toString()}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            ListHeaderComponent={
+                <>
+                    <Header textMain="Home Talents" navigation={navigation} />
+                    <Text style={styles.subHeading}>Categories</Text>
+                    <FlatList
+                        data={categories}
+                        renderItem={renderCategories}
+                        keyExtractor={(item) => item.id.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: 10 }}
+                    />
+                </>
+            }
+            showsVerticalScrollIndicator={false}
+        />
+    );
+    
 }
 const styles = StyleSheet.create({
     header: {
@@ -83,27 +121,6 @@ const styles = StyleSheet.create({
     },
     categoryText: {
         fontSize: 20
-    },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 9,
-        marginTop: 20,
-        width: 370,
-    },
-    searchIcon: {
-        width: 30,
-        height: 27,
-        marginRight: 10,
-        marginLeft: 10
-    },
-    search: {
-        flex: 1,
-        paddingVertical: 10,
-        fontSize: 20,
-        color: 'black',
     }
 })
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
 import Header from '../Components/Header';
 
-const Login = ({ setAuth, navigation }) => {
+const Login = ({ setAuth, navigation, setUser }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
@@ -26,15 +26,24 @@ const Login = ({ setAuth, navigation }) => {
                 password: password,
             }),
         })
-            .then(res => res.json())
-            .then(data => console.log('Response:', data))
-            .catch(err => console.error(err));
-        setAuth(true);
+        .then(async res => {
+            const data = await res.json();
+            if (res.ok) {
+                setUser(data.user);
+                setAuth(true);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Something went wrong. Please try again later.');
+        });
     };
 
     return (
         <View>
-            <Header navigation={navigation} />
+            <Header navigation={navigation} textMain="Hello!" textSub="Welcome to Home Talents" />
             <View style={styles.loginForm}>
                 <Text style={styles.login}>Login</Text>
                 <TextInput
