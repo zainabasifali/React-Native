@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { useWindowDimensions } from 'react-native';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { TabView, TabBar } from 'react-native-tab-view';
+import { AuthContext } from '../../Context/AuthContext';
 
-const Posts = ({ user }) => {
+const Posts = ({ navigation, userId, userToken}) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -11,7 +12,11 @@ const Posts = ({ user }) => {
     const fetchPosts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://10.0.2.2:3000/api/posts/userPosts/${user.id}`);
+            const response = await fetch(`http://192.168.100.8:3000/api/posts/userPosts/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
             const data = await response.json();
             setPosts(data);
         } catch (error) {
@@ -22,10 +27,8 @@ const Posts = ({ user }) => {
     };
 
     useEffect(() => {
-        if (user) {
-            fetchPosts();
-        }
-    }, [user]);
+        fetchPosts();
+    }, []);
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -34,10 +37,10 @@ const Posts = ({ user }) => {
     };
 
     const renderPosts = ({ item }) => (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { navigation, collection: 'Posts', userId: item.user_id })}>
             <View style={styles.posts}>
                 {item.postPicture && (
-                    <Image source={{ uri: `http://10.0.2.2:3000/uploads/${item.postPicture}` }} style={styles.postImg} />
+                    <Image source={{ uri: `http://192.168.100.8:3000/uploads/${item.postPicture}` }} style={styles.postImg} />
                 )}
             </View>
         </TouchableOpacity>
@@ -66,7 +69,7 @@ const Posts = ({ user }) => {
     );
 };
 
-const Services = ({ user }) => {
+const Services = ({ navigation, userId, userToken}) => {
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
@@ -74,7 +77,11 @@ const Services = ({ user }) => {
     const fetchServices = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`http://10.0.2.2:3000/api/posts/userServices/${user.id}`);
+            const response = await fetch(`http://192.168.100.8:3000/api/posts/userServices/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
             const data = await response.json();
             setServices(data);
         } catch (error) {
@@ -85,10 +92,8 @@ const Services = ({ user }) => {
     };
 
     useEffect(() => {
-        if (user) {
-            fetchServices();
-        }
-    }, [user]);
+        fetchServices();
+    }, []);
 
     const onRefresh = async () => {
         setRefreshing(true);
@@ -97,16 +102,16 @@ const Services = ({ user }) => {
     };
 
     const renderServices = ({ item }) => (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('PostDetails', { navigation, collection: 'Services', userId: item.user_id })}>
             <View style={styles.sales}>
                 {item.postPicture && (
-                    <Image source={{ uri: `http://10.0.2.2:3000/uploads/${item.postPicture}` }} style={styles.salesImg} />
+                    <Image source={{ uri: `http://192.168.100.8:3000/uploads/${item.postPicture}` }} style={styles.salesImg} />
                 )}
                 <View style={{ textAlign: 'center' }}>
                     <Text style={styles.salesHeading} numberOfLines={1} ellipsizeMode="tail">{item.title} </Text>
                     <Text style={styles.salesDesc}>{item.prize} Rs</Text>
                     <TouchableOpacity style={styles.button} onPress={() => alert('Contact Zainab Asif at:\n 03783747565748\n ')}>
-                        <Text style={styles.buttonText}>Contact Now!</Text>
+                        <Text style={styles.buttonText}>Contact !</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -136,10 +141,12 @@ const Services = ({ user }) => {
     );
 };
 
-const Profile = ({ user, navigation }) => {
+const Profile = ({ navigation, route }) => {
+    const userId = route?.params?.userId;
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
     const [profileData, setProfileData] = useState({});
+    const { userToken, user } = useContext(AuthContext);
 
     const [routes] = useState([
         { key: 'first', title: 'Posts' },
@@ -149,9 +156,9 @@ const Profile = ({ user, navigation }) => {
     const renderScene = ({ route }) => {
         switch (route.key) {
             case 'first':
-                return <Posts user={user} />;
+                return <Posts navigation={navigation} userId={userId} userToken={userToken} />;
             case 'second':
-                return <Services user={user} />;
+                return <Services navigation={navigation} userId={userId} userToken={userToken} />;
             default:
                 return null;
         }
@@ -159,7 +166,11 @@ const Profile = ({ user, navigation }) => {
 
     const fetchProfile = async () => {
         try {
-            const response = await fetch(`http://10.0.2.2:3000/api/user/profile/${user.id}`);
+            const response = await fetch(`http://192.168.100.8:3000/api/user/profile/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
             const data = await response.json();
             setProfileData(data);
         } catch (error) {
@@ -168,16 +179,14 @@ const Profile = ({ user, navigation }) => {
     };
 
     useEffect(() => {
-        if (user) {
-            fetchProfile();
-        }
-    }, [user]);
+        fetchProfile();
+    }, [userId, profileData]);
 
     return (
         <View style={styles.View}>
             <View style={styles.container}>
                 {profileData.profilePicture && (
-                    <Image source={{ uri: `http://10.0.2.2:3000/uploads/${profileData.profilePicture}` }} style={styles.profileImg} />
+                    <Image source={{ uri: `http://192.168.100.8:3000/uploads/${profileData.profilePicture}` }} style={styles.profileImg} />
                 )}
                 <Text style={styles.bioHeading}>{profileData.name}</Text>
                 <Text style={styles.bioPara}>{profileData.profession}</Text>
@@ -191,9 +200,7 @@ const Profile = ({ user, navigation }) => {
                         <Text style={styles.buttonText}>Edit Profile</Text>
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity style={styles.profileButton} onPress={() => alert('Explore Pressed!')}>
-                        <Text style={styles.buttonText}>Follow</Text>
-                    </TouchableOpacity>
+                    null
                 )}
             </View>
 
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     profileImg: {
-        height: 200,
+        height: 180,
         width: '100%',
         borderRadius: 20
     },
@@ -260,12 +267,12 @@ const styles = StyleSheet.create({
     },
     sales: {
         flexDirection: 'row',
-        gap: 20,
+        gap: 15,
         elevation: 10,
         backgroundColor: '#fff',
         borderRadius: 10,
         width: '90%',
-        padding: 20,
+        padding: 10,
         margin: 20,
     },
     salesImg: {
@@ -274,8 +281,9 @@ const styles = StyleSheet.create({
         width: 150
     },
     salesHeading: {
-        fontSize: 28,
-        width: 170,
+        marginTop:5,
+        fontSize: 23,
+        width: 140,
     },
     salesDesc: {
         fontSize: 20,
@@ -305,7 +313,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#47787F',
         height: 50,
         border: 1,
-        width: 160,
+        width: 136,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

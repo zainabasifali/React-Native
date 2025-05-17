@@ -1,15 +1,43 @@
-import { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Button, ScrollView } from 'react-native';
+import { ScrollView } from "react-native-gesture-handler";
+import { useState, useEffect, useContext } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Image } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
+import Toast from '../../Components/Toast';
+import { AuthContext } from '../../Context/AuthContext';
+import useToast from "../../hooks/useToast";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const SignUp = ({ navigation }) => {
+const EditProfile = ({ navigation, route }) => {
+    const { userId } = route.params;
+    const { toast, showToast, hideToast } = useToast();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [image, setImage] = useState('');
     const [profession, setProfession] = useState('');
-    const [password, setPassword] = useState('')
-    const [error, setError] = useState({ nameError: '', emailError: '', passwordError: '', professionError: '' });
+    const [error, setError] = useState({ nameError: '', emailError: '', professionError: '' });
+    const { userToken } = useContext(AuthContext);
+
+    const fetchProfile = async () => {
+        try {
+            const response = await fetch(`http://192.168.100.8:3000/api/user/profile/${userId}`,{
+                headers: {
+                    Authorization: `Bearer ${userToken}`
+                }
+            });
+            const data = await response.json();
+            setName(data.name);
+            setEmail(data.email);
+            setProfession(data.profession);
+            setImage(data.profilePicture);
+
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    }
+    useEffect(() => {
+        fetchProfile();
+    }, []);
 
     const selectImage = () => {
         launchImageLibrary({ mediaType: 'photo' }, response => {
@@ -18,60 +46,73 @@ const SignUp = ({ navigation }) => {
             }
         });
     };
-
-    const handleSubmit = () => {
-        if (!email || !password || !name || error.nameError || error.emailError || error.passwordError || error.professionError) {
+    const handleSubmit = async() => {
+        if (!email || !name || error.nameError || error.emailError || error.professionError) {
             alert('Please check credentials and fill in all fields');
             return;
         }
         const formData = new FormData();
         formData.append('name', name);
         formData.append('email', email);
-        formData.append('password', password);
         formData.append('profession', profession);
-        if (image) {
+
+        if (image && image.startsWith('file')) {
             formData.append('profilePicture', {
                 uri: image,
                 type: 'image/jpeg',
                 name: `${Date.now()}_profile.jpg`,
             });
         }
-        fetch('http://10.0.2.2:3000/api/user/register', {
-            method: 'POST',
+
+        fetch(`http://192.168.100.8:3000/api/user/updateProfile`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'multipart/form-data',
+                  Authorization: `Bearer ${userToken}`
             },
             body: formData
         })
             .then(async res => {
-                const data = await res.json();
                 if (res.ok) {
-                    navigation.navigate('Login')
-                } else {
-                    alert(data.message);
+                    const data = await res.json();
+                    await AsyncStorage.setItem('user_data', JSON.stringify(data.user));
+                    showToast("Profile updated successfully", 'success')
+                    setTimeout(() => {
+                      navigation.navigate('Profile')
+                    }, 1000);
+                }
+                else{
+                    showToast("Profile updation error", 'error')
+
                 }
             })
-            .catch(err => {
-                console.error(err);
-                alert('Something went wrong. Please try again later.');
-            });
-
+            .catch(err => showToast('Something went wrong. Please try again later', 'error')
+);
 
     };
-
     return (
-        <ScrollView>
-            <Header navigation={navigation} textMain="Hello!" textSub="Welcome to Home Talents" />
+        
+        <ScrollView >
+            <Header navigation={navigation} textMain={"Edit Profile"} textSub={"Below is your information"} />
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                visible={toast.visible}
+                onDismiss={hideToast}
+            />
             <View style={styles.loginForm}>
-                <Text style={styles.login}>SignUp</Text>
                 {image ? (
                     <Image
-                        source={{ uri: image }}
+                        source={
+                            image.startsWith('file')
+                                ? { uri: image }
+                                : { uri: `http://192.168.100.8:3000/uploads/${image}` }
+                        }
                         style={styles.imagePreview}
                     />
                 ) : (
                     <Image
-                        source={require('../../Images/user.png')}
+                        source={require('../../../Images/user.png')}
                         style={styles.imagePreview}
                     />
                 )}
@@ -117,30 +158,18 @@ const SignUp = ({ navigation }) => {
                 />
                 {error.emailError ? <Text style={styles.errorText}>{error.emailError}</Text> : null}
 
-                <TextInput
-                    style={styles.input}
-                    secureTextEntry
-                    onChangeText={(text) => {
-                        setPassword(text);
-                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
-                        setError(prev => ({ ...prev, passwordError: passwordRegex.test(text) ? '' : 'Password must be at least 8 characters, include upper/lowercase, a number, and special char' }));
-                    }}
-                    placeholder="Password"
-                    value={password}
-                />
-                {error.passwordError ? <Text style={styles.errorText}>{error.passwordError}</Text> : null}
-
                 <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
-                    <Text style={styles.ButtonText}>SignUp</Text>
+                    <Text style={styles.ButtonText}>Save</Text>
                 </TouchableOpacity>
 
 
             </View>
+
         </ScrollView>
+
     )
 }
 const styles = StyleSheet.create({
-
     loginForm: {
         padding: 30,
         marginTop: 25
@@ -203,11 +232,11 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
         borderRadius: 75,
-        marginTop: 20,
+        marginTop: -20,
         alignSelf: 'center',
         borderWidth: 2,
         borderColor: '#47787F'
     }
 
 });
-export default SignUp
+export default EditProfile;

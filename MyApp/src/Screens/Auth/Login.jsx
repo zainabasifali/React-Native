@@ -1,44 +1,28 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput } from 'react-native';
-import Header from '../Components/Header';
+import Header from '../../Components/Header';
+import { AuthContext } from '../../Context/AuthContext';
+import Toast from '../../Components/Toast';
+import useToast from "../../hooks/useToast";
 
-const Login = ({ setAuth, navigation, setUser }) => {
+const Login = ({ navigation }) => {
+    const { login } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [passwordError, setPasswordError] = useState('');
+    const [error, setError] = useState('');
+     const { toast, showToast, hideToast } = useToast();
 
-    const handleSubmit = () => {
-        if (emailError || passwordError || !email || !password) {
+    const handleSubmit = async () => {
+        setError('');
+        if (!email || !password) {
             alert('Please check credentials and fill in all fields');
             return;
         }
-        console.log('email is: ', email);
-        console.log('Password is: ', password);
 
-        fetch('http://10.0.2.2:3000/api/user/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password,
-            }),
-        })
-        .then(async res => {
-            const data = await res.json();
-            if (res.ok) {
-                setUser(data.user);
-                setAuth(true);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Something went wrong. Please try again later.');
-        });
+        try {
+            await login(email, password, navigation);
+        } catch (err) {
+            showToast("Invalid email or password", 'error')}
     };
 
     return (
@@ -50,26 +34,22 @@ const Login = ({ setAuth, navigation, setUser }) => {
                     style={styles.input}
                     onChangeText={(text) => {
                         setEmail(text);
-                        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                        setEmailError(emailRegex.test(text) ? '' : 'Invalid email address');
                     }}
                     placeholder="Email"
                     value={email}
                 />
-                {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
                 <TextInput
                     style={styles.input}
                     secureTextEntry
                     onChangeText={(text) => {
                         setPassword(text);
-                        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
-                        setPasswordError(passwordRegex.test(text) ? '' : 'Password must be at least 8 characters, include upper/lowercase, a number, and special char');
                     }}
                     placeholder="Password"
                     value={password}
                 />
-                {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+
+                {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
                 <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
                     <Text style={styles.ButtonText}>Login</Text>
@@ -78,16 +58,22 @@ const Login = ({ setAuth, navigation, setUser }) => {
                 <Text style={styles.alternateText}>---------   Or SignIn with   ---------</Text>
                 <View style={styles.iconContainer}>
                     <View style={styles.iconParent}>
-                        <Image source={require('../../Images/facebook.png')} style={styles.icons} />
+                        <Image source={require('../../../Images/facebook.png')} style={styles.icons} />
                     </View>
                     <View style={styles.iconParent}>
-                        <Image source={require('../../Images/google.png')} style={styles.icons} />
+                        <Image source={require('../../../Images/google.png')} style={styles.icons} />
                     </View>
                     <View style={styles.iconParent}>
-                        <Image source={require('../../Images/instagram.png')} style={styles.icons} />
+                        <Image source={require('../../../Images/instagram.png')} style={styles.icons} />
                     </View>
                 </View>
             </View>
+             <Toast
+                message={toast.message}
+                type={toast.type}
+                visible={toast.visible}
+                onDismiss={hideToast}
+            />
         </View>
     );
 };
@@ -96,10 +82,9 @@ const styles = StyleSheet.create({
 
     loginForm: {
         padding: 30,
-        marginTop: 25
     },
     login: {
-        fontSize: 35,
+        fontSize: 33,
         color: '#47787F',
         fontWeight: 'bold',
     },
@@ -141,19 +126,19 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     icons: {
-        height: 55,
-        width: 55
+        height: 50,
+        width: 50
     },
     alternateText: {
         marginTop: 40,
-        fontSize: 25,
+        fontSize: 23,
         textAlign: 'center',
         color: 'gray'
     },
     errorText: {
         color: 'red',
-        fontSize: 15,
-        marginTop: 5,
+        fontSize: 20,
+        marginTop: 10,
     }
 });
 

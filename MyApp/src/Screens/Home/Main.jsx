@@ -5,7 +5,7 @@ const Main = ({ navigation }) => {
 
   return (
     <LinearGradient colors={['#7FA3A7', '#47787F', '#2F4F53']} style={styles.container}>
-      <Image source={require('../../Images/social.jpg')} style={styles.image} />
+      <Image source={require('../../../Images/social.jpg')} style={styles.image} />
       <Text style={[styles.text, styles.heading]}>Home Talents</Text>
       <Text style={[styles.text, styles.para]} >Make your journey exciting, with adding a bit of appreciation</Text>
       <View style={styles.buttonContainer}>
@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 4
+    padding: 5,
   },
   image: {
     height: 300,
-    width: 340,
+    width: '95%',
     borderRadius: 100,
     marginBottom: 30,
     alignSelf: 'center'
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   para: {
-    fontSize: 25,
+    fontSize: 23,
     marginBottom: 40
   },
   buttonContainer: {
@@ -54,15 +54,15 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#FFFFFF',
     height: 60,
-    width: 180,
+    width: 155,
     borderRadius: 25,
   },
   buttonText: {
     color: '#47787F',
     fontWeight: 'bold',
-    fontSize: 25,
+    fontSize: 23,
     textAlign: 'center',
-    marginTop: 10
+    marginTop: 12
 
   }
 })

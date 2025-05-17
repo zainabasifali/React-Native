@@ -1,34 +1,95 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, View, Text, Image, ScrollView, Button, TouchableOpacity, TextInput } from 'react-native';
+import { AuthContext } from '../Context/AuthContext';
 
-const Post = ({ postData }) => {
-    const [liked, setLiked] = useState(false);
+const Post = ({ postData, navigation, handleLikeToggled }) => {
+    const [liked, setLiked] = useState(postData.likeId ? true : false);
+    const { userToken, user } = useContext(AuthContext)
+
+
+    const handleLikes = async (likeId) => {
+        try {
+            if (liked) {
+                const response = await fetch(`http://192.168.100.8:3000/api/likes/deleteLike/${likeId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+
+                    },
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setLiked(false);
+                    navigation.navigate('Home')
+                    if (handleLikeToggled) {
+                        handleLikeToggled()
+                    }
+                } else {
+                    console.error('Unlike failed:', data.message || 'Unknown error');
+                }
+            } else {
+                const response = await fetch(`http://192.168.100.8:3000/api/likes/createLike`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${userToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ postId: postData.id }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setLiked(true);
+                    navigation.navigate('Home')
+                    handleLikeToggled()
+                } else {
+                    console.error('Like failed:', data.message || 'Unknown error');
+                }
+            }
+        } catch (error) {
+            console.error('Error toggling like:', error);
+        }
+    };
+
+
     return (
         <View style={styles.posts}>
-            {postData.type !== 'Service' ? (<View style={styles.posterInfo}>
-                <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
-                <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
-            </View>) : (
+            {postData.type !== 'Service' ? (
                 <View style={styles.posterInfo}>
-                    <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
-                    <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
-                    <Text style={styles.salesText}>For Sale</Text>
-                </View>
-            )}
-            <Image source={{ uri: `http://10.0.2.2:3000/uploads/${postData.postPicture}` }} style={styles.postImage} />
-            <Text style={styles.postText}>{postData.description}</Text>
-            <View style={{ width: '100%', alignItems: 'flex-end' }}>
-                <TouchableOpacity onPress={() => setLiked(!liked)}>
-                    <Image
-                        source={liked
-                            ? require('../../Images/heart.png')
-                            : require('../../Images/icons8-heart-24.png')
-                        }
-                        style={styles.icon}
-                    />
+                    <Image source={{ uri: `http://192.168.100.8:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
+                    <TouchableOpacity onPress={() => { { navigation.navigate('Profile', { userId: postData.user_id }) } }}>
+                        <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
+                    </TouchableOpacity>
+                </View>) :
+                (
+                    <View style={styles.posterInfo}>
+                        <Image source={{ uri: `http://192.168.100.8:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
+                        <TouchableOpacity onPress={() => { navigation.navigate('Profile', { userId: postData.user_id }) }}>
+                            <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.salesText}>Service</Text>
+                    </View>
+                )}
+            <Image source={{ uri: `http://192.168.100.8:3000/uploads/${postData.postPicture}` }} style={styles.postImage} />
 
-                </TouchableOpacity>
-            </View>
+            <Text style={styles.postText}>{postData.description}</Text>
+            {postData.user_id !== user?.id &&
+                <View style={{ width: '100%', alignItems: 'flex-end' }}>
+                    <TouchableOpacity onPress={() => { handleLikes(postData.likeId) }}>
+                        <Image
+                            source={postData.likeId
+                                ? require('../../Images/heart.png')
+                                : require('../../Images/icons8-heart-24.png')
+                            }
+                            style={styles.icon}
+                        />
+
+                    </TouchableOpacity>
+                </View>
+            }
         </View>
     )
 }

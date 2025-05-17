@@ -1,46 +1,45 @@
-import { useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from './src/Context/AuthContext';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image, TouchableOpacity, Alert } from 'react-native';
-import Home from './src/Screens/Home'
-import Profile from './src/Screens/Profile'
-import Main from "./src/Screens/Main";
-import Login from "./src/Screens/login"
-import AddPost from './src/Screens/AddPost';
-import SignUp from './src/Screens/signUp';
-import EditProfile from './src/Screens/EditProfile';
+import { Image } from 'react-native';
+import Home from './src/Screens/Home/Home'
+import Profile from './src/Screens/Profile/Profile'
+import Main from "./src/Screens/Home/Main";
+import Login from "./src/Screens/Auth/Login"
+import AddPost from './src/Screens/Posts/AddPost';
+import SignUp from './src/Screens/Auth/signUp';
+import EditProfile from './src/Screens/Profile/EditProfile';
+import DeleteConfirmationModal from './src/Components/DeleteModalComponent';
+import PostDetails from './src/Screens/Posts/PostDetails';
+import useDelete from './src/hooks/useDelete';
+import AddCategory from './src/Screens/Category/AddCategory';
+import UpdateCategory from './src/Screens/Category/UpdateCategory';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
-    const [auth, setAuth] = useState(false)
-    const [user, setUser] = useState(null);
+    const {userToken, user,logout } = useContext(AuthContext);
+    const {
+        deleteModalVisible,
+        deleteData,
+        triggerDelete,
+        confirmDelete,
+        cancelDelete,
+    } = useDelete({
+        baseUrl: `http://192.168.100.8:3000/api/user/delete/`,
+        onSuccess: ({ id, type }) => {
+            if (type === 'user') {
+                logout();
+            }
+        }
+    });
+   useEffect(() => {
+    
+}, [userToken]);
 
-    const handleDeleteAccount = async () => {
-        Alert.alert(
-            "Delete Account",
-            "Are you sure you want to delete your account?",
-            [
-                { text: "Cancel" },
-                {
-                    text: "Delete",
-                    onPress: async () => {
-                        const response = await fetch(`http://172.16.187.122:3000/api/user/delete/${user.id}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        });
-                        if (response.ok) {
-                            setAuth(false);
-                        }
-                    }
-                }
-            ]
-        );
-    }
 
     const TabStack = () => {
         return (
@@ -49,11 +48,11 @@ const App = () => {
             }}>
                 <Tab.Screen
                     name="Home"
-                    children={(props) => <Home {...props} user={user} />}
+                    component={HomeStack}
                     options={{
                         title: 'Home', headerShown: false, tabBarShowLabel: false,
                         tabBarIcon: ({ focused }) => (<Image source={require('./Images/home.png')}
-                            style={{ height: 40, width: 40, tintColor: focused ? "black" : "gray" }} />)
+                            style={{ height: 38, width: 35, tintColor: focused ? "black" : "gray" }} />)
                     }} />
                 <Tab.Screen
                     name="AddPost"
@@ -62,7 +61,7 @@ const App = () => {
                         title: 'Add', headerShown: false, tabBarShowLabel: false,
                         tabBarIcon: ({ focused }) => (
                             <Image source={require('./Images/add.png')}
-                                style={{ height: 40, width: 40, tintColor: focused ? "black" : "gray" }} />)
+                                style={{ height: 38, width: 35, tintColor: focused ? "black" : "gray" }} />)
                     }} />
                 <Tab.Screen
                     name="Profile"
@@ -74,12 +73,12 @@ const App = () => {
                         tabBarIcon: ({ focused }) => (
                             <Image
                                 source={require('./Images/user.png')}
-                                style={{ height: 40, width: 40, tintColor: focused ? "black" : "gray" }}
+                                style={{ height: 33, width: 35, tintColor: focused ? "black" : "gray" }}
                             />
                         ),
                     }}
                     listeners={({ navigation }) => ({
-                        tabLongPress: handleDeleteAccount,
+                        tabLongPress: () => triggerDelete({ id: user?.id, name: user?.name, type: 'user' }),
                         tabPress: (e) => {
                             e.preventDefault();
                             navigation.navigate('Profile');
@@ -97,14 +96,14 @@ const App = () => {
                     options={{
                         gestureEnabled: true,
                     }}>
-                    {props => <SignUp {...props} setAuth={setAuth} />}
+                    {props => <SignUp {...props} />}
 
                 </Stack.Screen>
                 <Stack.Screen name="Login"
                     options={{
                         gestureEnabled: true,
                     }}>
-                    {props => <Login {...props} setAuth={setAuth} setUser={setUser} />}
+                    {props => <Login {...props} />}
 
                 </Stack.Screen>
             </Stack.Navigator>
@@ -113,23 +112,37 @@ const App = () => {
     const ProfileStack = () => {
         return (
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Profile" >
-                    {props => <Profile {...props} user={user} />}
-                </Stack.Screen>
-                <Stack.Screen name="EditProfile" >
-                    {props => <EditProfile {...props} user={user} />}
-                </Stack.Screen>
+                <Stack.Screen name="Profile" component={Profile} initialParams={{userId: user?.id}} />
+                <Stack.Screen name="EditProfile" component={EditProfile} initialParams={{userId: user?.id}} />
+                <Stack.Screen name="PostDetails" component={PostDetails} />
             </Stack.Navigator>
         );
     }
+    const HomeStack = ()=>{
+        return (
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Profile" component={Profile} />
+                <Stack.Screen name="PostDetails" component={PostDetails} />
+                <Stack.Screen name="AddCategory" component={AddCategory} />
+                <Stack.Screen name="UpdateCategory" component={UpdateCategory} />
+            </Stack.Navigator>
+        );
+    }
+   
     return (
         <NavigationContainer>
-            {auth ? (
+            {userToken !== null? (
                 <TabStack />
             ) : (
                 <LoginStack />
             )}
-
+            <DeleteConfirmationModal
+                visible={deleteModalVisible}
+                itemName={deleteData.name}
+                onConfirm={confirmDelete}
+                onCancel={cancelDelete}
+            />
         </NavigationContainer>
 
     )
