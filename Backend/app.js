@@ -6,6 +6,9 @@ const knex = require('knex')(require('./knexfile.js'));
 const userRoutes = require('./routes/user');
 const categoryRoutes = require('./routes/category');
 const postRoutes = require('./routes/post');
+const authRoutes = require('./routes/auth');
+const likeRoutes = require('./routes/like.js')
+const authenticateToken = require('./middleware/auth');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,10 +21,11 @@ knex.migrate.latest()
     .catch((err) => {
         console.error('Migration error:', err);
     });
-
-app.use('/api/user', userRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/posts', postRoutes);
+app.use('/api/auth', authRoutes)
+app.use('/api/user', authenticateToken, userRoutes);
+app.use('/api/categories', authenticateToken, categoryRoutes);
+app.use('/api/posts', authenticateToken, postRoutes);
+app.use('/api/likes', authenticateToken,likeRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
