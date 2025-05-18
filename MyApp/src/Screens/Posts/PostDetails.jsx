@@ -24,7 +24,13 @@ const PostDetails = ({ route }) => {
         cancelDelete,
     } = useDelete({
         baseUrl: `http://192.168.100.8:3000/api/posts/delete/`,
-        onSuccess: () => { fetchPosts(), navigation.navigate('Profile') },
+        onSuccess: () => {
+              showToast("Deleted Post Successfully", 'success');
+                setTimeout(() => {
+                    fetchPosts(), 
+                    navigation.navigate('Profile')
+                }, 1000);
+             },
     });
 
     const fetchPosts = async () => {

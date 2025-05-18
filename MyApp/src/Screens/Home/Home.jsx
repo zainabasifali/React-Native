@@ -3,6 +3,8 @@ import React, { useState, useEffect, useContext } from "react";
 import Post from '../../Components/Post';
 import Header from '../../Components/Header';
 import useDelete from '../../hooks/useDelete';
+import Toast from '../../Components/Toast';
+import useToast from '../../hooks/useToast';
 import DeleteConfirmationModal from '../../Components/DeleteModalComponent';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
@@ -13,6 +15,7 @@ const Home = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const { user, userToken } = useContext(AuthContext);
+    const { toast, showToast, hideToast } = useToast();
 
     const {
         deleteModalVisible,
@@ -22,7 +25,12 @@ const Home = ({ navigation }) => {
         cancelDelete,
     } = useDelete({
         baseUrl: `http://192.168.100.8:3000/api/categories/delete/`,
-        onSuccess: () => { fetchCategories() },
+        onSuccess: () => { 
+             showToast("Deleted Category Successfully", 'success');
+                setTimeout(() => {
+                    fetchCategories()
+                }, 1000);
+         },
     });
     const nav = useNavigation();
     const fetchCategories = async () => {
@@ -62,7 +70,7 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity onPress={() => { fetchPosts(item.id) }} onLongPress={() => { user?.role == 'admin' && (triggerDelete({ id: item.id, name: item.name, type: 'category' })) }}>
                     <Image source={{ uri: `http://192.168.100.8:3000/uploads/${item.picture}` }} style={styles.categoryImage} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => { user.role == 'admin' && nav.navigate('UpdateCategory', { id: item.id }) }}>
+                <TouchableOpacity onPress={() => { user?.role == 'admin' && nav.navigate('UpdateCategory', { id: item.id }) }}>
                     <Text style={styles.categoryText} >{item?.name}</Text>
                 </TouchableOpacity>
             </View>
@@ -134,6 +142,12 @@ const Home = ({ navigation }) => {
                 itemName={deleteData.name}
                 onConfirm={confirmDelete}
                 onCancel={cancelDelete}
+            />
+             <Toast
+                message={toast.message}
+                type={toast.type}
+                visible={toast.visible}
+                onDismiss={hideToast}
             />
         </View>
     );

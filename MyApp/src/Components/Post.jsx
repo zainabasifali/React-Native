@@ -60,7 +60,7 @@ const Post = ({ postData, navigation, handleLikeToggled }) => {
             {postData.type !== 'Service' ? (
                 <View style={styles.posterInfo}>
                     <Image source={{ uri: `http://192.168.100.8:3000/uploads/${postData.profilePicture}` }} style={styles.profileImage} />
-                    <TouchableOpacity onPress={() => { { navigation.navigate('Profile', { userId: postData.user_id }) } }}>
+                    <TouchableOpacity onPress={() => {  navigation.navigate('Profile', { userId: postData.user_id }) }}>
                         <Text style={{ fontSize: 25, marginLeft: 10 }}>{postData.userName}</Text>
                     </TouchableOpacity>
                 </View>) :

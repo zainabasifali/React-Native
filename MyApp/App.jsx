@@ -4,6 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Image } from 'react-native';
+import Toast from './src/Components/Toast';
+import useToast from './src/hooks/useToast';
 import Home from './src/Screens/Home/Home'
 import Profile from './src/Screens/Profile/Profile'
 import Main from "./src/Screens/Home/Main";
@@ -21,7 +23,8 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
-    const {userToken, user,logout } = useContext(AuthContext);
+    const { userToken, user, logout } = useContext(AuthContext);
+    const { toast, showToast, hideToast } = useToast();
     const {
         deleteModalVisible,
         deleteData,
@@ -32,13 +35,17 @@ const App = () => {
         baseUrl: `http://192.168.100.8:3000/api/user/delete/`,
         onSuccess: ({ id, type }) => {
             if (type === 'user') {
-                logout();
+                showToast("Account deleted Successfully", 'success');
+                setTimeout(() => {
+                    logout();
+                }, 1000);
+
             }
         }
     });
-   useEffect(() => {
-    
-}, [userToken]);
+    useEffect(() => {
+
+    }, [userToken]);
 
 
     const TabStack = () => {
@@ -112,13 +119,13 @@ const App = () => {
     const ProfileStack = () => {
         return (
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Profile" component={Profile} initialParams={{userId: user?.id}} />
-                <Stack.Screen name="EditProfile" component={EditProfile} initialParams={{userId: user?.id}} />
+                <Stack.Screen name="Profile" component={Profile} initialParams={{ userId: user?.id }} />
+                <Stack.Screen name="EditProfile" component={EditProfile} initialParams={{ userId: user?.id }} />
                 <Stack.Screen name="PostDetails" component={PostDetails} />
             </Stack.Navigator>
         );
     }
-    const HomeStack = ()=>{
+    const HomeStack = () => {
         return (
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={Home} />
@@ -129,10 +136,10 @@ const App = () => {
             </Stack.Navigator>
         );
     }
-   
+
     return (
         <NavigationContainer>
-            {userToken !== null? (
+            {userToken !== null ? (
                 <TabStack />
             ) : (
                 <LoginStack />
@@ -142,6 +149,12 @@ const App = () => {
                 itemName={deleteData.name}
                 onConfirm={confirmDelete}
                 onCancel={cancelDelete}
+            />
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                visible={toast.visible}
+                onDismiss={hideToast}
             />
         </NavigationContainer>
 
