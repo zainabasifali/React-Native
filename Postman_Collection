@@ -1,0 +1,607 @@
+{
+    "info": {
+        "_postman_id": "d792f9fe-a665-466d-bc57-601aae47514d",
+        "name": "HomeTalents",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Signup",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:3000/api/auth/register",
+                    "path": [
+                        "api",
+                        "auth",
+                        "register"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "name",
+                            "value": "Alina"
+                        },
+                        {
+                            "key": "email",
+                            "value": "alina@gmail.com"
+                        },
+                        {
+                            "key": "password",
+                            "value": "Abc.1234"
+                        },
+                        {
+                            "key": "profession",
+                            "value": "Baker"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Login",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:3000/api/auth/login",
+                    "path": [
+                        "api",
+                        "auth",
+                        "login"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "email",
+                            "value": "alina@gmail.com"
+                        },
+                        {
+                            "key": "password",
+                            "value": "Abc.1234"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Profile",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/user/profile/5",
+                    "path": [
+                        "api",
+                        "user",
+                        "profile",
+                        "5"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "header": [
+                    {
+                        "key": "Token",
+                        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM"
+                    }
+                ],
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Search Profile",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/user/search?q=zai",
+                    "query": [
+                        {
+                            "key": "q",
+                            "value": "zai"
+                        }
+                    ],
+                    "variable": [],
+                    "path": [
+                        "api",
+                        "user",
+                        "search"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "name",
+                            "value": "Alina Ali"
+                        },
+                        {
+                            "key": "email",
+                            "value": "alina@gmail.com"
+                        },
+                        {
+                            "key": "profession",
+                            "value": "Baker"
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+         {
+            "name": "updateProfile",
+            "request": {
+                "method": "PUT",
+                "url": {
+                    "raw": "http://localhost:3000/api/user/updateProfile",
+                    "path": [
+                        "api",
+                        "user",
+                        "updateProfile"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "name",
+                            "value": "alina ali"
+                        },
+                        {
+                            "key": "profession",
+                            "value": "baker"
+                        },
+                        {
+                            "key": "email",
+                            "value": "alina@gmail.com"
+                        },
+                        {
+                            "key": "password",
+                            "value": "Abc.1234"
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NzI2MDYsImV4cCI6MTc0NzU3NjIwNn0.4FJCTM-VDpkzULuQBQMAartm1wlcv_dFwTOyUZf6zbQ",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "CreatePost",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/createPost",
+                    "path": [
+                        "api",
+                        "posts",
+                        "createPost"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "title",
+                            "value": "xyz"
+                        },
+                        {
+                            "key": "description",
+                            "value": "just for demo"
+                        },
+                        {
+                            "key": "categoryId",
+                            "value": "1"
+                        },
+                        {
+                            "key": "prize",
+                            "value": "\"null\""
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "UpdatePost",
+            "request": {
+                "method": "PUT",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/update/10",
+                    "path": [
+                        "api",
+                        "posts",
+                        "update",
+                        "10"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "title",
+                            "value": "code"
+                        },
+                        {
+                            "key": "description",
+                            "value": "just for demo"
+                        },
+                        {
+                            "key": "prize",
+                            "value": "0"
+                        },
+                        {
+                            "key": "categoryId",
+                            "value": "1"
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Posts",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/AllPosts",
+                    "path": [
+                        "api",
+                        "posts",
+                        "AllPosts"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "DeletePost",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/delete/10",
+                    "path": [
+                        "api",
+                        "posts",
+                        "delete",
+                        "10"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "UserPosts",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/userPosts/3",
+                    "path": [
+                        "api",
+                        "posts",
+                        "userPosts",
+                        "3"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "userServices",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/posts/userServices/3",
+                    "path": [
+                        "api",
+                        "posts",
+                        "userServices",
+                        "3"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AddCategory",
+            "request": {
+                "method": "POST",
+                "url": {
+                    "raw": "http://localhost:3000/api/categories/addCategory",
+                    "path": [
+                        "api",
+                        "categories",
+                        "addCategory"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "name",
+                            "value": "program"
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "updateCategory",
+            "request": {
+                "method": "PUT",
+                "url": {
+                    "raw": "http://localhost:3000/api/categories/update/8",
+                    "path": [
+                        "api",
+                        "categories",
+                        "update",
+                        "8"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "name",
+                            "value": "Problem"
+                        }
+                    ]
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "AllCategories",
+            "request": {
+                "method": "GET",
+                "url": {
+                    "raw": "http://localhost:3000/api/categories/AllCategories",
+                    "path": [
+                        "api",
+                        "categories",
+                        "AllCategories"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "deleteCategory",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:3000/api/categories/delete/8",
+                    "path": [
+                        "api",
+                        "categories",
+                        "delete",
+                        "8"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "deleteUser",
+            "request": {
+                "method": "DELETE",
+                "url": {
+                    "raw": "http://localhost:3000/api/user/delete/5",
+                    "path": [
+                        "api",
+                        "user",
+                        "delete",
+                        "5"
+                    ],
+                    "protocol": "http",
+                    "host": [
+                        "localhost"
+                    ],
+                    "port": "3000"
+                },
+                "auth": {
+                    "type": "bearer",
+                    "bearer": [
+                        {
+                            "key": "token",
+                            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJhbGluYUBnbWFpbC5jb20iLCJpYXQiOjE3NDc1NjkyNjMsImV4cCI6MTc0NzU3Mjg2M30.CXXW7ThxzopR9LxSdrNC6eVstiA9jzsLmZujA2vcALM",
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
